@@ -1,0 +1,420 @@
+ create table EMP(Id int(2),EmpName varchar(20),EmpSalary int(6),Designation varchar(10),DeptNo int(1));
+
+Alter Table EMP ADD PRIMARY KEY (Id);
+
+INSERT INTO EMP VALUES(1,"Dolu",20000,"Manager",10),
+     (2,"Bholu",30000,"Trainer",20),
+     (3,"Bheem",15000,"CEO",10),
+     (4,"Chudki",30000,"Doctor",90),
+     (5,"Raju",50000,"Nurse",50),
+     (6,"Kaliya",22000,"Police",40),
+     (7,"Janku",22000,"Doctor",25);
+insert into EMP values(8,"Indumathi",30000,"Trainer",20);
+
+ select * From EMP;
++----+---------+-----------+-------------+--------+
+| Id | EmpName | EmpSalary | Designation | DeptNo |
++----+---------+-----------+-------------+--------+
+|  1 | Dolu    |     20000 | Manager     |     10 |
+|  2 | Bholu   |     30000 | Trainer     |     20 |
+|  3 | Bheem   |     15000 | CEO         |     10 |
+|  4 | Chudki  |     30000 | Doctor      |     90 |
+|  5 | Raju    |     50000 | Nurse       |     50 |
+|  6 | Kaliya  |     22000 | Police      |     40 |
+|  7 | Janku   |     22000 | Doctor      |     25 |
++----+---------+-----------+-------------+--------+
+
+select Id,EmpName from EMP
+     where DeptNo in(
+     Select DeptNo from EMP
+     group by DeptNo
+     having count(*)>1
+     );
++----+---------+
+| Id | EmpName |
++----+---------+
+|  1 | Dolu    |
+|  3 | Bheem   |
++----+---------+
+
+select EmpName,EmpSalary*12 as AnnualSalary from EMP;
++---------+--------------+
+| EmpName | AnnualSalary |
++---------+--------------+
+| Dolu    |       240000 |
+| Bholu   |       360000 |
+| Bheem   |       180000 |
+| Chudki  |       360000 |
+| Raju    |       600000 |
+| Kaliya  |       264000 |
+| Janku   |       264000 |
++---------+--------------+
+
+SELECT EmpName,
+            EmpSalary + (EmpSalary * 10 / 100) AS HikedSalary
+     FROM EMP;
++---------+-------------+
+| EmpName | HikedSalary |
++---------+-------------+
+| Dolu    |  22000.0000 |
+| Bholu   |  33000.0000 |
+| Bheem   |  16500.0000 |
+| Chudki  |  33000.0000 |
+| Raju    |  55000.0000 |
+| Kaliya  |  24200.0000 |
+| Janku   |  24200.0000 |
+
+
+select * from EMP where Designation="Doctor" AND EmpSalary>=25000;
++----+---------+-----------+-------------+--------+
+| Id | EmpName | EmpSalary | Designation | DeptNo |
++----+---------+-----------+-------------+--------+
+|  4 | Chudki  |     30000 | Doctor      |     90 |
++----+---------+-----------+-------------+--------+
+
+
+emp name where work in managaer,nurse,police ,ceo ,trainer
+select * from EMP where Designation!="Doctor";
++----+---------+-----------+-------------+--------+
+| Id | EmpName | EmpSalary | Designation | DeptNo |
++----+---------+-----------+-------------+--------+
+|  1 | Dolu    |     20000 | Manager     |     10 |
+|  2 | Bholu   |     30000 | Trainer     |     20 |
+|  3 | Bheem   |     15000 | CEO         |     10 |
+|  5 | Raju    |     50000 | Nurse       |     50 |
+|  6 | Kaliya  |     22000 | Police      |     40 |
++----+---------+-----------+-------------+--------+
+
+
+empnames except Raju bheem dolu and kalia
+
+ SELECT EmpName
+     FROM EMP
+     WHERE EmpName NOT IN ("Raju", "Bheem", "Dholu", "Kalia");
++---------+
+| EmpName |
++---------+
+| Dolu    |
+| Bholu   |
+| Chudki  |
+| Kaliya  |
+| Janku   |
++---------+
+
+all details where desig managaer ceo nurse and dep no 50 90 10 20
+
+select * from EMP
+     where DESIGNATION IN ("Manager","CEO","Nurse") AND
+     DeptNO IN (50,90,10,20);
++----+---------+-----------+-------------+--------+
+| Id | EmpName | EmpSalary | Designation | DeptNo |
++----+---------+-----------+-------------+--------+
+|  1 | Dolu    |     20000 | Manager     |     10 |
+|  3 | Bheem   |     15000 | CEO         |     10 |
+|  5 | Raju    |     50000 | Nurse       |     50 |
++----+---------+-----------+-------------+--------+
+
+all detail where salary>20000 and <30000
+
+select * from EMP
+where EmpSalary>20000 AND EmpSalary<30000;
++----+---------+-----------+-------------+--------+
+| Id | EmpName | EmpSalary | Designation | DeptNo |
++----+---------+-----------+-------------+--------+
+|  6 | Kaliya  |     22000 | Police      |     40 |
+|  7 | Janku   |     22000 | Doctor      |     25 |
++----+---------+-----------+-------------+--------+
+or
+ SELECT *
+     FROM EMP
+     WHERE EmpSalary BETWEEN 20001 AND 29999;
++----+---------+-----------+-------------+--------+
+| Id | EmpName | EmpSalary | Designation | DeptNo |
++----+---------+-----------+-------------+--------+
+|  6 | Kaliya  |     22000 | Police      |     40 |
+|  7 | Janku   |     22000 | Doctor      |     25 |
++----+---------+-----------+-------------+--------+
+
+deptno between 40 and 90
+select * from EMP
+where DeptNo between 41 AND 89;
++----+---------+-----------+-------------+--------+
+| Id | EmpName | EmpSalary | Designation | DeptNo |
++----+---------+-----------+-------------+--------+
+|  5 | Raju    |     50000 | Nurse       |     50 |
++----+---------+-----------+-------------+--------+
+
+display emp name and salary where emp not earning salary more than 15k and less than 22k
+ select * from EMP
+ WHERE EmpSalary NOT BETWEEN 15000 AND 22000;
++----+---------+-----------+-------------+--------+
+| Id | EmpName | EmpSalary | Designation | DeptNo |
++----+---------+-----------+-------------+--------+
+|  2 | Bholu   |     30000 | Trainer     |     20 |
+|  4 | Chudki  |     30000 | Doctor      |     90 |
+|  5 | Raju    |     50000 | Nurse       |     50 |
++----+---------+-----------+-------------+--------+
+
+dept not betwwn 20 and 40;
+select * FROM EMP
+WHERE DeptNo NOT BETWEEN 20 AND 40;
++----+---------+-----------+-------------+--------+
+| Id | EmpName | EmpSalary | Designation | DeptNo |
++----+---------+-----------+-------------+--------+
+|  1 | Dolu    |     20000 | Manager     |     10 |
+|  3 | Bheem   |     15000 | CEO         |     10 |
+|  4 | Chudki  |     30000 | Doctor      |     90 |
+|  5 | Raju    |     50000 | Nurse       |     50 |
++----+---------+-----------+-------------+--------+
+
+emp name where name start with a
+
+select EmpName from EMP where EmpName LIKE 'B%';
+
+
+empname end with m
+select EmpName from EMP where EmpName LIKE '%M';
+
+EMPNAME CONTAIN 4 CHAR
+
+SELECT EmpName FROM EMP
+WHERE EmpName LIke '____';
++---------+
+| EmpName |
++---------+
+| Dolu    |
+| Raju    |
++---------+
+
+name second letter is a
+
+SELECT EmpName FROM EMP
+WHERE EmpName LIke '_a%';
++---------+
+| EmpName |
++---------+
+| Raju    |
+| Kaliya  |
+| Janku   |
++---------+
+
+name where last to second is y
+
+SELECT EmpName FROM EMP
+WHERE EmpName LIke '%y_';
+
+second car is h and total 5
+
+SELECT EmpName FROM EMP
+WHERE EmpName LIke '_h___';
+
+name where earnig salary is 5 digi
+SELECT EmpName FROM EMP
+WHERE EmpSalary LIke '_____';
+
+name where anme satrts with B and R
+
+SELECT EmpName FROM EMP
+WHERE EmpName LIke 'b%' or EmpName LIKE 'r%';
+
+name where name contain 2 a 
+
+SELECT EmpName FROM EMP
+WHERE EmpName LIke '%a%a%';
+
+name dont start with r
+SELECT EmpName FROM EMP
+WHERE EmpName not LIke 'm%';
+
+name and desif where desig not seond letter with a
+select EmpName, Designation from EMP 
+WHERE Designation NOT LIKE '_A%';
++---------+-------------+
+| EmpName | Designation |
++---------+-------------+
+| Bholu   | Trainer     |
+| Bheem   | CEO         |
+| Chudki  | Doctor      |
+| Raju    | Nurse       |
+| Kaliya  | Police      |
+| Janku   | Doctor      |
++---------+-------------+
+
+display name salary wwhere salary not contain less than 3 digits and name not start with B R D
+
+select EmpName, EmpSalary from EMP
+WHERE EmpSalary not like '__'
+AND EmpName NOT LIKE '[BRD]%';
+
+name start with vowel characters
+select EmpName FROM EMP
+WHERE EmpName LIKE '[AEIOU]%';
+
+NAME START WITH CONSONANTS
+select EmpName FROM EMP
+WHERE EmpName NOT LIKE '[AEIOU]%';
+
+DISPLAY name where name contains atleast 5 char
+select EmpName FROM EMP
+WHERE EmpName LIKE '_____%';
+
+atmost 5
+select EmpName FROM EMP
+WHERE EmpName NOT LIKE '______%';
+
+IS OPERATOR
+check  if null or not
+
+
+convert employees name to upper case
+select UPPER(EmpName) AS EmpName from EMP;
+select LOWER(EmpName) AS EmpName from EMP;
+
+SUBSTRING
+'''''''''
+LU FROM DOLU
+select SUBSTR(EmpName,3,2)
+FROM EMP
+WHERE EmpName="Dolu";
+
+diplsy first 2 letters of name
+select SUBSTR(EmpName,1,2) AS EmpName
+from EMP;
+
+DUSPLAY LAST 2 LETTER
+select SUBSTR(EmpName,-2,2) AS EmpName
+from EMP;
+
+secon letter
+select SUBSTR(EmpName,2,1) AS EmpName
+from EMP;
+
+first 3 letterr of name, last 3 letter of name
+select SUBSTR(EmpName,1,3) AS FIRST3, SUBSTR(EmpName,-3) AS LAST3
+from EMP;
+
+NAME START WITH VOWEL
+SELECT EmpName From EMP
+Where SUBSTR(EmpName,2,1) IN ('A','E','I','O','U');
+
+replace first 2 char with yy
+select replace(EmpName,substr(empname,1,2),'yy')
+from EMP;
+
+replace last 2 letters of name with zz
+select replace(EmpName,substr(EmpName,-2),'zz')
+from EMP;
+
+replace name with zz
+select replace(EmpName,EmpName,'zz')
+from EMP;
+
+LENGTH FN
+'''''''''''''
+find number of characters in name
+select length(EmpName) AS EmpNameLength from EMP;
+
+Select replace(EmpName,'e','')
+from EMP;
+
+find  number  a in name
+select length(EmpName)-length(replace(EmpName,'a','')) AS Occurence_of_A
+from EMP;
+
+Reverse of name
+select reverse(EmpName)
+from EMP;
+
+INSTRING
+'''''''''''
+first occurence of a
+SELECT EmpName, INSTR(EmpName, 'a') AS First_position_of_a
+FROM EMP;
++---------+---------------+
+| EmpName | position_of_a |
++---------+---------------+
+| Dolu    |             0 |
+| Bholu   |             0 |
+| Bheem   |             0 |
+| Chudki  |             0 |
+| Raju    |             2 |
+| Kaliya  |             2 |
+| Janku   |             2 |
++---------+---------------+
+
+
+find first half of emp name
+select EmpName, substring(EmpName,1,length(EmpName)/2) as FirstHalf
+from EMP;
+
+second half
+select EmpName, substring(EmpName,(length(EmpName)/2)+1) as SecondHalf
+from EMP;
+
+GROUP BY
+'''''''''
+
+num of employeess present in each dept
+select DeptNo, count(*) as NoOfEmp
+from emp
+group by DeptNo;
+
+max salary of each dep
+SELECT DeptNo,Max(EmpSalary) as MaxSalary
+from EMP
+group by DeptNO;
+
+max slary inn each dept if name start with consaonant char
+select EmpName,DeptNo, MAX(EmpSalary)
+from EMP
+where substr(EmpName,1,1) not in ('A','E','I','O','U')
+group by EmpName,DeptNo;
+
+
+max,min,avg salary if emp in each desig
+select Designation,MAX(EmpSalary),MIN(EmpSalary),AVG(EmpSalary)
+FROM EMP
+GROUP BY Designation;
+
+MAX SALARY IN DPET EXCEPT DEPT 20
+SELECT DeptNo,MAX(EmpSalary)
+FROM EMP
+WHERE DeptNO!=20
+GROUP BY DeptNO;
+
+no of emp in each dept where atleast 2 employees are working in the dept
+select DeptNo,count(EmpName) AS NoOfEMP
+from EMP
+group by DeptNo
+HAVING NoOfEMP>=2;
+
+max salary in each dept whre max salary is more than 30000
+select DeptNo,Max(EmpSalary) AS MAXSALARY
+FROM EMP
+GROUP BY DeptNo
+HAVING MAXSALARY>30000;
+
+display duplicate salary
+select EmpSalary,count(*)
+from EMP
+Group by EmpSalary
+Having Count(*)>1;
+
+display unique salary
+select EmpSalary,count(*)
+from EMP
+Group by EmpSalary
+Having Count(*)=1;
+
+ORDER BY
+'''''''''''
+display salary in asc
+select EmpSalary
+from EMP
+Order By EmpSalary ASC;
+
+dsplay max salary in each dept  and sort the SALARY IN desc order
+select DeptNO, MAX(EmpSalary) as MaxSal
+from EMP
+Group by DeptNo
+ORDER BY MaxSal Desc;
