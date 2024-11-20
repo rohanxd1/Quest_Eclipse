@@ -1,0 +1,106 @@
+CREATE TABLE Depart(DeptNo int(2),Department varchar(10));
+
+INSERT INTO Depart VALUES(20,"IT"),
+(40,"Accounts"),
+(90,"Accounts"),
+(10,"Sales");
+
+emplyee name from emp with department name accounts
+SELECT EmpName
+FROM EMP
+WHERE DeptNo IN (
+    SELECT DeptNo
+    FROM Depart
+    WHERE Department = "Accounts"
+);
+
+Insert into Depart Values(100,"Sales");
+
+display all employees whose dept id not in depart table
+select * from EMP
+where DeptNo Not In(
+select DeptNo 
+from Depart);
+
+Chutki dept name
+select Department
+from Depart
+where DeptNo=(
+select DeptNo
+from EMP
+where EmpName="Chudki");
+
+
+second max salry from emplyee
+select max(EmpSalary) AS MaxSal
+from EMP
+where EmpSalary<(
+select max(EmpSalary)
+from EMP);
+
+3rd min
+select min(EmpSalary) AS MinSal
+from EMP
+where EmpSalary>(
+select min(EmpSalary)
+from EMP
+where EmpSalary>(
+select min(EmpSalary)
+from EMP
+)
+);
+
+
+Display dept of employee where employee are earning unique salary
+SELECT DISTINCT DeptNo, Department
+FROM Depart
+WHERE DeptNo IN (
+    SELECT DeptNo
+    FROM EMP
+    WHERE EmpSalary IN (
+        SELECT EmpSalary
+        FROM EMP
+        GROUP BY EmpSalary
+        HAVING COUNT(*) = 1
+    )
+);
+
+
+
+SELECT Department,DeptNo
+FROM Depart
+WHERE DeptNo IN(
+    SELECT DeptNo
+    FROM EMP
+    GROUP BY EmpSalary
+    HAVING COUNT(EmpSalary)=1
+);
+ 
+
+JOIN
+###########
+display all where EMP Dpno=DEP Dpno
+select * FROM EMP INNER JOIN Depart
+on EMP.DeptNo=Depart.DeptNo;
+
+select EMP.EmpName,EMP.EmpSalary,EMP.DeptNo,Department FROM EMP INNER JOIN Depart
+on EMP.DeptNo=Depart.DeptNo;
+
+select * FROM EMP LEFT JOIN Depart
+on EMP.DeptNo=Depart.DeptNo;
+
+select * FROM EMP CROSS JOIN Depart
+on EMP.DeptNo=Depart.DeptNo;
+
+SELF JOINS
+#######################################
+SELECT * FROM EMP e1,EMP e2
+where e1.DeptNo=e2.DeptNo;
+
+SELECT * FROM EMP e1,EMP e2
+where e1.EmpSalary=e2.EmpSalary;
+########################################
+
+
+
+

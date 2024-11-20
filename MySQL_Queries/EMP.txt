@@ -418,3 +418,11 @@ select DeptNO, MAX(EmpSalary) as MaxSal
 from EMP
 Group by DeptNo
 ORDER BY MaxSal Desc;
+
+
+
+PSUEDOCOLOUMN
+##################
+
+display row numb for table
+select rownumber

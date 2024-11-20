@@ -1,8 +1,0 @@
-/**
- * 
- */
-/**
- * 
- */
-module Quest_eclipse {
-}
