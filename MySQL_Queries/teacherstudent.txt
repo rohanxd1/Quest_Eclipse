@@ -1,0 +1,22 @@
+create table teachers(id int(2) primary key,name varchar(20),password varchar(20));
+
+create table students(id int(2),name varchar(20),password varchhar(20),year int);
+
+CREATE TABLE marklist (
+    sid INT(2), 
+    subid INT,
+    subject VARCHAR(10),
+    fid INT,
+    CONSTRAINT fk_students FOREIGN KEY (sid) REFERENCES students(id)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
+    CONSTRAINT fk_teachers FOREIGN KEY (fid) REFERENCES teachers(id)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE
+);
+#########################################################################################################
+INSERT INTO TEACHERS VALUES(1,'TEACHER1','teacher1#'),
+(2,'TEACHER2','teacher2#');
+
+Insert into students values(1,'student1','student1#',2),
+(2,'student2','student2#',4);
