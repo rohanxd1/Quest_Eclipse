@@ -88,16 +88,16 @@ public class StudentTeacherRec
 	}
 	
 	//disp marklist
-	public static void dispmark(Connection c, int id) throws SQLException
+	public static void dispmark(Connection c, int id) throws SQLException 
 	{
-	    String displayMarkQuery = "SELECT SUBJECT, SUBID, FID FROM MARKLIST WHERE SID = ?";
+	    String displayMarkQuery = "SELECT SUBJECT, SUBID, MARKS, FID FROM MARKLIST WHERE SID = ?";
 	    try (PreparedStatement ps = c.prepareStatement(displayMarkQuery)) 
 	    {
 	        ps.setInt(1, id);
 	        try (ResultSet rs = ps.executeQuery()) 
 	        {
-	            
-	            if (!rs.isBeforeFirst()) {
+	            if (!rs.isBeforeFirst()) 
+	            { 
 	                System.out.println("No marks found for the given student ID.");
 	                return;
 	            }
@@ -106,12 +106,14 @@ public class StudentTeacherRec
 	            {
 	                String subject = rs.getString("SUBJECT");
 	                int subId = rs.getInt("SUBID");
+	                int marks = rs.getInt("MARKS");
 	                int fid = rs.getInt("FID");
-	                System.out.println("("+subId+")Subject: " + subject  + " FID: " + fid);
+	                System.out.println("(" + subId + ") Subject: " + subject + ", Marks: " + marks + ", Faculty ID (FID): " + fid);
 	            }
 	        }
 	    }
 	}
+
 
 //	--------------------------------TEACHERS-------------------------------------------------
 	public static boolean teacherlogin(Connection c,String Loginname,String Teacherpass) throws SQLException
@@ -237,46 +239,39 @@ public class StudentTeacherRec
 	}
 	
 	//case 4: add markist
-	public static void addMarklist(Connection c, String tname) throws SQLException 
-	{	int currentTeacherId=0;
-		String getTid="SELECT ID FROM TEACHERS WHERE NAME=?";
-		try(PreparedStatement tidps=c.prepareStatement(getTid);)
-		{	tidps.setString(1,tname);
-			ResultSet res=tidps.executeQuery();
-			if(res.next())
-			{
-				currentTeacherId=res.getInt(1);
-			}
-		}
+	public static void addMarklist(Connection c, String tname) throws SQLException {
+	    int currentTeacherId = 0;
+	    String getTid = "SELECT ID FROM TEACHERS WHERE NAME=?";
+	    try (PreparedStatement tidps = c.prepareStatement(getTid)) {
+	        tidps.setString(1, tname);
+	        ResultSet res = tidps.executeQuery();
+	        if (res.next()) {
+	            currentTeacherId = res.getInt(1);
+	        }
+	    }
 	    Scanner sc = new Scanner(System.in);
-	    while (true) 
-	    {
+	    while (true) {
 	        System.out.println("1. Add New Marklist");
 	        System.out.println("2. Update Existing Marklist");
 	        System.out.println("3. Go Back");
 	        System.out.print("Enter your choice: ");
 	        int choice = sc.nextInt();
-	        sc.nextLine(); 
+	        sc.nextLine();
 
-	        if (choice == 3) 
-	        {	
-	        	System.out.println();
-	            break; 
+	        if (choice == 3) {
+	            System.out.println();
+	            break;
 	        }
 
 	        System.out.print("Enter student ID: ");
 	        int studentId = sc.nextInt();
 	        sc.nextLine();
-	        
-	        
+
 	        String checkstudent = "SELECT * FROM STUDENTS WHERE ID = ?";
-	        try (PreparedStatement checkStudentPS = c.prepareStatement(checkstudent)) 
-	        {
+	        try (PreparedStatement checkStudentPS = c.prepareStatement(checkstudent)) {
 	            checkStudentPS.setInt(1, studentId);
-	            try (ResultSet rs = checkStudentPS.executeQuery()) 
-	            {
-	                if (!rs.next()) 
-	                {
+	            try (ResultSet rs = checkStudentPS.executeQuery()) {
+	                if (!rs.next()) {
 	                    System.out.println("No student exists with the given ID.");
 	                    System.out.println();
 	                    continue;
@@ -284,14 +279,11 @@ public class StudentTeacherRec
 	            }
 	        }
 
-	        
 	        if (choice == 1) {
 	            String checkMarklist = "SELECT * FROM MARKLIST WHERE SID = ?";
-	            try (PreparedStatement checkMarklistPS = c.prepareStatement(checkMarklist)) 
-	            {
+	            try (PreparedStatement checkMarklistPS = c.prepareStatement(checkMarklist)) {
 	                checkMarklistPS.setInt(1, studentId);
-	                try (ResultSet rs = checkMarklistPS.executeQuery()) 
-	                {
+	                try (ResultSet rs = checkMarklistPS.executeQuery()) {
 	                    if (rs.next()) {
 	                        System.out.println("Marklist already exists for this student.");
 	                        System.out.println();
@@ -300,7 +292,6 @@ public class StudentTeacherRec
 	                }
 	            }
 
-	            
 	            System.out.println("Enter marks for Physics, Chemistry, and Maths:");
 	            System.out.print("Physics: ");
 	            int physicsMarks = sc.nextInt();
@@ -308,46 +299,42 @@ public class StudentTeacherRec
 	            int chemistryMarks = sc.nextInt();
 	            System.out.print("Maths: ");
 	            int mathsMarks = sc.nextInt();
-	            sc.nextLine(); 
+	            sc.nextLine();
 
-	            String insertMarklistQuery = "INSERT INTO MARKLIST (SID, SUBID, SUBJECT, FID) VALUES (?, ?, ?, ?)";
-	            try (PreparedStatement insertPS = c.prepareStatement(insertMarklistQuery)) 
-	            {
-	                
+	            String insertMarklistQuery = "INSERT INTO MARKLIST (SID, SUBID, SUBJECT, MARKS, FID) VALUES (?, ?, ?, ?, ?)";
+	            try (PreparedStatement insertPS = c.prepareStatement(insertMarklistQuery)) {
+	                // Physics
 	                insertPS.setInt(1, studentId);
-	                insertPS.setInt(2, 1); 
+	                insertPS.setInt(2, 1);
 	                insertPS.setString(3, "Physics");
-	                insertPS.setInt(4, currentTeacherId);
+	                insertPS.setInt(4, physicsMarks);
+	                insertPS.setInt(5, currentTeacherId);
 	                insertPS.executeUpdate();
 
-	                
+	                // Chemistry
 	                insertPS.setInt(1, studentId);
-	                insertPS.setInt(2, 2); 
+	                insertPS.setInt(2, 2);
 	                insertPS.setString(3, "Chemistry");
-	                insertPS.setInt(4, currentTeacherId);
+	                insertPS.setInt(4, chemistryMarks);
+	                insertPS.setInt(5, currentTeacherId);
 	                insertPS.executeUpdate();
 
-	                
+	                // Maths
 	                insertPS.setInt(1, studentId);
 	                insertPS.setInt(2, 3);
 	                insertPS.setString(3, "Maths");
-	                insertPS.setInt(4, currentTeacherId);
+	                insertPS.setInt(4, mathsMarks);
+	                insertPS.setInt(5, currentTeacherId);
 	                insertPS.executeUpdate();
 
 	                System.out.println("Marklist added successfully.");
 	            }
-	        }
-	        
-	        else if (choice == 2) 
-	        {
+	        } else if (choice == 2) {
 	            String checkMarklist = "SELECT * FROM MARKLIST WHERE SID = ?";
-	            try (PreparedStatement checkMarklistPS = c.prepareStatement(checkMarklist)) 
-	            {
+	            try (PreparedStatement checkMarklistPS = c.prepareStatement(checkMarklist)) {
 	                checkMarklistPS.setInt(1, studentId);
-	                try (ResultSet rs = checkMarklistPS.executeQuery()) 
-	                {
-	                    if (!rs.next()) 
-	                    {
+	                try (ResultSet rs = checkMarklistPS.executeQuery()) {
+	                    if (!rs.next()) {
 	                        System.out.println("No marklist exists for this student.");
 	                        System.out.println();
 	                        continue;
@@ -355,7 +342,6 @@ public class StudentTeacherRec
 	                }
 	            }
 
-	            
 	            System.out.println("Enter marks to update for Physics, Chemistry, and Maths:");
 	            System.out.print("Physics: ");
 	            int physicsMarks = sc.nextInt();
@@ -363,40 +349,41 @@ public class StudentTeacherRec
 	            int chemistryMarks = sc.nextInt();
 	            System.out.print("Maths: ");
 	            int mathsMarks = sc.nextInt();
-	            sc.nextLine(); 
+	            sc.nextLine();
 
-	            String updateMarklistQuery = "UPDATE MARKLIST SET FID = ? WHERE SID = ? AND SUBJECT = ?";
-	            try (PreparedStatement updatePS = c.prepareStatement(updateMarklistQuery)) 
-	            {
-	                
-	                updatePS.setInt(1, currentTeacherId);
-	                updatePS.setInt(2, studentId);
-	                updatePS.setString(3, "Physics");
+	            String updateMarklistQuery = "UPDATE MARKLIST SET MARKS = ?, FID = ? WHERE SID = ? AND SUBJECT = ?";
+	            try (PreparedStatement updatePS = c.prepareStatement(updateMarklistQuery)) {
+	                // Physics
+	                updatePS.setInt(1, physicsMarks);
+	                updatePS.setInt(2, currentTeacherId);
+	                updatePS.setInt(3, studentId);
+	                updatePS.setString(4, "Physics");
 	                updatePS.executeUpdate();
 
-	                
-	                updatePS.setInt(1, currentTeacherId);
-	                updatePS.setInt(2, studentId);
-	                updatePS.setString(3, "Chemistry");
+	                // Chemistry
+	                updatePS.setInt(1, chemistryMarks);
+	                updatePS.setInt(2, currentTeacherId);
+	                updatePS.setInt(3, studentId);
+	                updatePS.setString(4, "Chemistry");
 	                updatePS.executeUpdate();
 
-	                
-	                updatePS.setInt(1, currentTeacherId);
-	                updatePS.setInt(2, studentId);
-	                updatePS.setString(3, "Maths");
+	                // Maths
+	                updatePS.setInt(1, mathsMarks);
+	                updatePS.setInt(2, currentTeacherId);
+	                updatePS.setInt(3, studentId);
+	                updatePS.setString(4, "Maths");
 	                updatePS.executeUpdate();
 
 	                System.out.println("Marklist updated successfully.");
 	                System.out.println();
 	            }
-	        } 
-	        else 
-	        {
+	        } else {
 	            System.out.println("Invalid choice. Please try again.");
 	            System.out.println();
 	        }
 	    }
 	}
+
 
 	//------------
 	//case 5:
